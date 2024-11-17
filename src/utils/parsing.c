@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 00:28:12 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/08 14:41:23 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/17 20:53:10 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static bool	is_num(char **av)
 	return (true);
 }
 
-static bool is_overflow(char **av)
+static bool	is_overflow(char **av)
 {
 	int	i;
 
@@ -44,6 +44,30 @@ static bool is_overflow(char **av)
 	return (false);
 }
 
+static int	set_constants(char **av, t_data *data)
+{
+	data->n_philo = ft_mod_atoi(av[1]);
+	if (data->n_philo > MAX_PHILO || data->n_philo <= 0)
+		return (ft_error("Error: invalid number_of_philosophers"));
+	data->time_die = (long) ft_mod_atoi(av[2]);
+	if (data->time_die == 0)
+		return (ft_error("Error: invalid time_to_die"));
+	data->time_eat = (long) ft_mod_atoi(av[3]);
+	if (data->time_die == 0)
+		return (ft_error("Error: invalid time_to_eat"));
+	data->time_sleep = (long) ft_mod_atoi(av[4]);
+	if (data->time_die == 0)
+		return (ft_error("Error: invalid time_to_sleep"));
+	if (av[5])
+		data->n_orbit = (long) ft_mod_atoi(av[5]);
+	else
+		data->n_orbit = -1;
+	if (data->n_orbit == 0)
+		return (ft_error(
+				"Error: invalid number_of_times_each_philosopher_must_eat"));
+	return (EXIT_SUCCESS);
+}
+
 int	parsing(char **av, t_data *data)
 {
 	int	i;
@@ -53,20 +77,13 @@ int	parsing(char **av, t_data *data)
 		return (ft_error("Error: only positive integers accepted"));
 	if (is_overflow(av))
 		return (ft_error("Error: integer is too large"));
-	data->n_philo = ft_mod_atoi(av[1]);
 	data->ids = (int *)malloc(sizeof(int) * (data->n_philo + 1));
 	if (!data->ids)
 		return (ft_error("Error: malloc failed"));
 	while (++i < data->n_philo)
 		data->ids[i] = 1;
 	data->stop = false;
+	data->ready = false;
 	data->ids[data->n_philo] = 0;
-	data->time_die = ft_mod_atoi(av[2]);
-	data->time_eat = ft_mod_atoi(av[3]);
-	data->time_sleep = ft_mod_atoi(av[4]);
-	if (av[5])
-		data->n_orbits = ft_mod_atoi(av[5]);
-	else
-		data->n_orbits = -1;
-	return (EXIT_SUCCESS);
+	return (set_constants(av, data));
 }

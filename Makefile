@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: akloster <akloster@student.42.fr>          +#+  +:+       +#+         #
+#    By: akloster <akloster@student.s19.be>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/24 02:28:42 by akloster          #+#    #+#              #
-#    Updated: 2024/11/10 19:06:14 by akloster         ###   ########.fr        #
+#    Updated: 2024/11/17 21:03:09 by akloster         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,14 +15,14 @@ RM				=	rm -rf
 SRC_DIR			=	src/
 
 SRC				=	main.c														\
-					utils/ft_error.c											\
 					utils/parsing.c												\
-					utils/ft_mod_atoi.c											\
-					utils/ft_mod_strlen.c										\
+					utils/tools.c										\
 					utils/alloc_handler.c										\
 					philosophing.c												\
 					utils/init_philo.c											\
-					utils/wrapper_fct.c
+					utils/wrapper_fct.c											\
+					utils/time_keeping.c										\
+					utils/philo_actions.c
 
 HEADERS			=	includes/philo.h
 
@@ -32,7 +32,8 @@ OBJ				=	$(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 
 CC				=	cc
 
-CFLAGS			=	-Iincludes -Wall -Wextra -Werror -pthread
+CFLAGS			=	-Iincludes -Wall -Wextra -Werror -pthread -g -fsanitize=thread
+
 NAME			=	philo
 
 $(NAME):		$(OBJ_DIR) $(OBJ)  

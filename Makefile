@@ -6,7 +6,7 @@
 #    By: akloster <akloster@student.s19.be>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/24 02:28:42 by akloster          #+#    #+#              #
-#    Updated: 2024/11/17 21:03:09 by akloster         ###   ########.fr        #
+#    Updated: 2024/11/18 01:57:31 by akloster         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ OBJ				=	$(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 
 CC				=	cc
 
-CFLAGS			=	-Iincludes -Wall -Wextra -Werror -pthread -g -fsanitize=thread
+CFLAGS			=	-Iincludes -Wall -Wextra -Werror -pthread #-g -fsanitize=thread
 
 NAME			=	philo
 

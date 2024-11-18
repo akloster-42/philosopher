@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 00:49:57 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/18 01:43:24 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/18 22:38:31 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	init_table(t_data *data, t_table *table)
 	while (++i < data->n_philo)
 	{
 		table[i].data = data;
-		table[i].id = i + 1;	
+		table[i].id = i + 1;
 		table[i].meal_lock = data->meal_lock;
 		table[i].print_lock = data->print_lock;
 		table[i].ready_lock = data->ready_lock;

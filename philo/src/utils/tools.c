@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 22:50:00 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/17 00:27:33 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/18 22:49:15 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,27 @@ bool	ft_compare(char *s1, char *s2)
 	return (false);
 }
 
-void	put_str(char *str, int fd)
+int	ft_mod_calloc(t_data *data)
 {
 	int	i;
 
 	i = -1;
-	while (str[++i])
-		write(fd, &str[i], 1);
-	write(fd, "\n", 1);
+	data->elapsed = malloc(sizeof(long) * data->n_philo);
+	if (!data->elapsed)
+		return (ft_error("Error: malloc failed"));
+	while (++i < data->n_philo)
+		data->elapsed[i] = 0;
+	return (EXIT_SUCCESS);
 }
 
 int	ft_error(char *msg)
 {
-	put_str(msg, STDERR_FILENO);
+	int	i;
+
+	i = -1;
+	while (msg[++i])
+		write(STDERR_FILENO, &msg[i], 1);
+	write(STDERR_FILENO, "\n", 1);
 	return (EXIT_FAILURE);
 }
 

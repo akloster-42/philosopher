@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:44:36 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/18 01:52:50 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/18 22:52:02 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static int	ft_pthread_join(t_data *data)
 int	init_philo(t_data *data)
 {
 	t_table	*table;
-	
+
 	table = NULL;
 	if (ft_mutex_init(data))
 		return (EXIT_FAILURE);
@@ -78,6 +78,6 @@ int	init_philo(t_data *data)
 	if (!table)
 		return (ft_error("Error: malloc failed"));
 	if (ft_pthread_create(data, &table) || ft_pthread_join(data))
-		return (ft_free(&table), EXIT_FAILURE);
-	return (ft_free(&table), EXIT_SUCCESS);
+		return (table_free(&table), EXIT_FAILURE);
+	return (table_free(&table), EXIT_SUCCESS);
 }

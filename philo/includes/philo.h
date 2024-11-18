@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 13:11:25 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/18 01:30:37 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/18 22:50:17 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ typedef struct s_table
 	pthread_mutex_t	*stop_lock;
 }	t_table;
 
-void	put_str(char *str, int fd);
+int		ft_mod_calloc(t_data *data);
 int		ft_error(char *msg);
 void	init_table(t_data *data, t_table *table);
 int		parsing(char **av, t_data *data);
@@ -80,7 +80,7 @@ int		ft_mod_atoi(char *str);
 bool	ft_compare(char *s1, char *s2);
 void	my_free(t_data *data);
 int		alloc_threads(t_data *data);
-void	ft_free(t_table **ptr);
+void	table_free(t_table **ptr);
 int		init_philo(t_data *data);
 void	*philo_routine(void *data);
 void	kill_mutex(t_data *data);

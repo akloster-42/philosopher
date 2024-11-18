@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:44:36 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/17 20:53:10 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/18 01:52:50 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,25 +25,21 @@ static int	ft_mutex_init(t_data *data)
 	if (pthread_mutex_init(data->meal_lock, NULL)
 		|| pthread_mutex_init(data->print_lock, NULL)
 		|| pthread_mutex_init(data->stop_lock, NULL)
-		|| pthread_mutex_init(data->rw_lock, NULL)
-		|| pthread_mutex_init(data->read, NULL)
-		|| pthread_mutex_init(data->write, NULL)
 		|| pthread_mutex_init(data->ready_lock, NULL))
 		return (ft_error("Error: mutex init. failed"));
 	return (EXIT_SUCCESS);
 }
 
-static int	ft_pthread_create(t_data *data)
+static int	ft_pthread_create(t_data *data, t_table **table)
 {
-	int	i;
-	t_table	table[MAX_PHILO];
+	int		i;
 
 	i = -1;
-	init_table(data, &table[0]);
+	init_table(data, *table);
 	while (++i < data->n_philo)
 	{
 		if (pthread_create(&((data->philo)[i])
-			, NULL, &philo_routine, (void *) &table[i]))
+			, NULL, &philo_routine, (void *) &(*table)[i]))
 			return (ft_error("Error: pthread_create failed"));
 	}
 	data->time_start = ft_gettime();
@@ -73,7 +69,15 @@ static int	ft_pthread_join(t_data *data)
 
 int	init_philo(t_data *data)
 {
-	return (ft_mutex_init(data)
-		|| ft_pthread_create(data)
-		|| ft_pthread_join(data));
+	t_table	*table;
+	
+	table = NULL;
+	if (ft_mutex_init(data))
+		return (EXIT_FAILURE);
+	table = malloc(sizeof(t_table) * data->n_philo);
+	if (!table)
+		return (ft_error("Error: malloc failed"));
+	if (ft_pthread_create(data, &table) || ft_pthread_join(data))
+		return (ft_free(&table), EXIT_FAILURE);
+	return (ft_free(&table), EXIT_SUCCESS);
 }

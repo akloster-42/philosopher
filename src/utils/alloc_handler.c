@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 14:01:55 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/17 19:53:26 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/18 01:30:19 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,6 @@ int	alloc_threads(t_data *data)
 	int	i;
 
 	i = -1;
-	data->read = malloc(sizeof(pthread_mutex_t));
-	if (!data->read)
-		return (ft_error("Error: malloc failed"));
-	data->write = malloc(sizeof(pthread_mutex_t));
-	if (!data->write)
-		return (ft_error("Error: malloc failed"));
 	data->meal_lock = malloc(sizeof(pthread_mutex_t));
 	if (!data->meal_lock)
 		return (ft_error("Error: malloc failed"));
@@ -31,9 +25,6 @@ int	alloc_threads(t_data *data)
 		return (ft_error("Error: malloc failed"));
 	data->ready_lock = malloc(sizeof(pthread_mutex_t));
 	if (!data->ready_lock)
-		return (ft_error("Error: malloc failed"));
-	data->rw_lock = malloc(sizeof(pthread_mutex_t));
-	if (!data->rw_lock)
 		return (ft_error("Error: malloc failed"));
 	data->stop_lock = malloc(sizeof(pthread_mutex_t));
 	if (!data->stop_lock)
@@ -60,26 +51,23 @@ void	kill_mutex(t_data *data)
 	pthread_mutex_destroy(data->meal_lock);
 	pthread_mutex_destroy(data->print_lock);
 	pthread_mutex_destroy(data->ready_lock);
-	pthread_mutex_destroy(data->rw_lock);
 	pthread_mutex_destroy(data->stop_lock);
-	pthread_mutex_destroy(data->read);
-	pthread_mutex_destroy(data->write);
-	free(data->read);
-	data->read = NULL;
-	free(data->write);
-	data->write = NULL;
 	free(data->meal_lock);
 	data->meal_lock = NULL;
 	free(data->print_lock);
 	data->print_lock = NULL;
 	free(data->ready_lock);
 	data->ready_lock = NULL;
-	free(data->rw_lock);
-	data->rw_lock = NULL;
 	free(data->stop_lock);
 	data->stop_lock = NULL;
 	while (++i < data->n_philo)
 		pthread_mutex_destroy(&(data->fork)[i]);
+}
+
+void	ft_free(t_table **ptr)
+{
+	free(*ptr);
+	*ptr = NULL;
 }
 
 void	my_free(t_data *data)

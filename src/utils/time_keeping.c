@@ -6,28 +6,35 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 00:10:09 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/17 19:19:39 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/17 23:28:43 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-bool	get_stop_bool(t_data *data)
+bool	get_stop_bool(t_table *table)
 {
-	pthread_mutex_lock(data->stop_lock);
-	if (data->stop == true)
+	pthread_mutex_lock(table->stop_lock);
+	if (table->data->stop == true)
 	{
-		pthread_mutex_unlock(data->stop_lock);
+		pthread_mutex_unlock(table->stop_lock);
 		return (true);
 	}
-	pthread_mutex_unlock(data->stop_lock);
+	pthread_mutex_unlock(table->stop_lock);
 	return (false);
 }
 
 static bool	end_philo(t_data *data, char *msg, int i)
 {
 	if (msg)
-		print_msg(data, DIE, i);
+	{
+		pthread_mutex_lock(data->print_lock);
+		pthread_mutex_lock(data->stop_lock);
+		if (data->stop == false)
+			printf(msg, ft_gettime() - data->time_start, i);
+		pthread_mutex_unlock(data->stop_lock);
+		pthread_mutex_unlock(data->print_lock);
+	}
 	pthread_mutex_lock(data->stop_lock);
 	data->stop = true;
 	pthread_mutex_unlock(data->stop_lock);
@@ -41,8 +48,13 @@ static bool	full_check(t_data *data)
 
 	i = -1;
 	full_cnt = 0;
-	if (get_stop_bool(data))
-		return (end_philo(data, NULL, 0));
+	pthread_mutex_lock(data->stop_lock);
+	if (data->stop == true)
+	{
+		pthread_mutex_unlock(data->stop_lock);
+		return (end_philo(data, DIE, i + 1));
+	}
+	pthread_mutex_unlock(data->stop_lock);
 	pthread_mutex_lock(data->meal_lock);
 	while (++i < data->n_philo)
 	{
@@ -59,8 +71,13 @@ static bool	death_check(t_data *data, int i)
 {
 	long	val;
 
-	if (get_stop_bool(data))
-		return (NULL);
+	pthread_mutex_lock(data->stop_lock);
+	if (data->stop == true)
+	{
+		pthread_mutex_unlock(data->stop_lock);
+		return (end_philo(data, DIE, i + 1));
+	}
+	pthread_mutex_unlock(data->stop_lock);
 	pthread_mutex_lock(data->meal_lock);
 	val = (data->elapsed)[i];
 	if (val == 0 && ft_gettime() - data->time_start > data->time_die)

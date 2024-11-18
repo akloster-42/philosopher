@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 13:11:25 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/17 21:08:28 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/18 01:30:37 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,9 @@ typedef struct s_data
 	long			*elapsed;
 	pthread_t		check_routine;
 	pthread_mutex_t	*fork;
-	pthread_mutex_t	*read;
-	pthread_mutex_t	*write;
 	pthread_mutex_t	*meal_lock;
 	pthread_mutex_t	*print_lock;
 	pthread_mutex_t	*ready_lock;
-	pthread_mutex_t	*rw_lock;
 	pthread_mutex_t	*stop_lock;
 }	t_data;
 
@@ -83,16 +80,17 @@ int		ft_mod_atoi(char *str);
 bool	ft_compare(char *s1, char *s2);
 void	my_free(t_data *data);
 int		alloc_threads(t_data *data);
+void	ft_free(t_table **ptr);
 int		init_philo(t_data *data);
 void	*philo_routine(void *data);
 void	kill_mutex(t_data *data);
 long	ft_gettime(void);
 void	set_forks(t_table *table, int n_philo);
-bool	get_stop_bool(t_data *data);
+bool	get_stop_bool(t_table *table);
 void	philo_eat(t_table *table);
 void	philo_sleep(t_table *table);
 void	*check_routine(void *ptr);
-void	print_msg(t_data *data, char *msg, int id);
+void	print_msg(t_table *table, char *msg, int id);
 void	ft_usleep(long time);
 
 #endif

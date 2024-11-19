@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:44:36 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/18 22:52:02 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/19 16:27:45 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,39 @@ static int	ft_mutex_init(t_data *data)
 	{
 		if (pthread_mutex_init(&((data->fork)[i]), NULL))
 			return (ft_error("Error: mutex init. failed"));
+		++data->n_init_forks;
 	}
-	if (pthread_mutex_init(data->meal_lock, NULL)
-		|| pthread_mutex_init(data->print_lock, NULL)
-		|| pthread_mutex_init(data->stop_lock, NULL)
-		|| pthread_mutex_init(data->ready_lock, NULL))
+	if (pthread_mutex_init(data->meal_lock, NULL))
 		return (ft_error("Error: mutex init. failed"));
+	++data->n_init_locks;
+	if (pthread_mutex_init(data->print_lock, NULL))
+		return (ft_error("Error: mutex init. failed"));
+	++data->n_init_locks;
+	if (pthread_mutex_init(data->stop_lock, NULL))
+		return (ft_error("Error: mutex init. failed"));
+	++data->n_init_locks;
+	if (pthread_mutex_init(data->ready_lock, NULL))
+		return (ft_error("Error: mutex init. failed"));
+	++data->n_init_locks;
 	return (EXIT_SUCCESS);
+}
+
+static void	thread_cleanup(t_data *data, int n_philo)
+{
+	int	i;
+
+	i = -1;
+	pthread_mutex_lock(data->stop_lock);
+	data->stop = true;
+	pthread_mutex_unlock(data->stop_lock);
+	pthread_mutex_lock(data->ready_lock);
+	data->ready = true;
+	pthread_mutex_unlock(data->ready_lock);
+	while (++i < n_philo)
+	{
+		if (pthread_join((data->philo)[i], NULL))
+			ft_error("Error: pthread_join failed");
+	}
 }
 
 static int	ft_pthread_create(t_data *data, t_table **table)
@@ -40,13 +66,22 @@ static int	ft_pthread_create(t_data *data, t_table **table)
 	{
 		if (pthread_create(&((data->philo)[i])
 			, NULL, &philo_routine, (void *) &(*table)[i]))
+		{
+			thread_cleanup(data, i);
 			return (ft_error("Error: pthread_create failed"));
+		}
 	}
 	data->time_start = ft_gettime();
 	pthread_mutex_lock(data->ready_lock);
 	data->ready = true;
 	pthread_mutex_unlock(data->ready_lock);
-	pthread_create(&data->check_routine, NULL, &check_routine, (void *) data);
+	if (pthread_create(&data->check_routine
+			, NULL, &check_routine, (void *) data))
+	{
+		pthread_detach(data->check_routine);
+		thread_cleanup(data, data->n_philo);
+		return (ft_error("Error: pthread_create failed"));
+	}
 	return (EXIT_SUCCESS);
 }
 

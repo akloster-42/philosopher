@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 00:49:57 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/18 22:38:31 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/19 16:10:58 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ static bool	get_ready_bool(t_table *table)
 
 static void	*lone_philo(t_table *table)
 {
+	if (get_stop_bool(table))
+		return (NULL);
 	print_msg(table, TAKE_FORK, 1);
 	ft_usleep(table->data->time_die);
 	print_msg(table, DIE, 1);

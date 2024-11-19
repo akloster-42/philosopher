@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 00:28:12 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/18 16:52:19 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:14:24 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,20 +70,11 @@ static int	set_constants(char **av, t_data *data)
 
 int	parsing(char **av, t_data *data)
 {
-	int	i;
-
-	i = -1;
 	if (!is_num(av))
 		return (ft_error("Error: only positive integers accepted"));
 	if (is_overflow(av))
 		return (ft_error("Error: integer is too large"));
-	data->ids = (int *)malloc(sizeof(int) * (data->n_philo + 1));
-	if (!data->ids)
-		return (ft_error("Error: malloc failed"));
-	while (++i < data->n_philo)
-		data->ids[i] = 1;
 	data->stop = false;
 	data->ready = false;
-	data->ids[data->n_philo] = 0;
 	return (set_constants(av, data));
 }

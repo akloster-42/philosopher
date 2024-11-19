@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 13:11:25 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/18 22:50:17 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:21:34 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@
 
 typedef struct s_data
 {
-	int				*ids;
 	int				n_philo;
 	long			time_die;
 	long			time_eat;
@@ -53,6 +52,8 @@ typedef struct s_data
 	pthread_t		*philo;
 	long			*elapsed;
 	pthread_t		check_routine;
+	int				n_init_locks;
+	int				n_init_forks;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	*meal_lock;
 	pthread_mutex_t	*print_lock;

@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 14:01:55 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/18 22:51:43 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/19 16:07:26 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,15 @@ int	alloc_threads(t_data *data)
 	return (ft_mod_calloc(data));
 }
 
-static void	free_mutex_ptr(pthread_mutex_t **ptr)
+static void	free_mutex_ptr(pthread_mutex_t **ptr, int *n_locks)
 {
 	if (!(*ptr))
 		return ;
-	pthread_mutex_destroy(*ptr);
+	if (*n_locks)
+	{
+		pthread_mutex_destroy(*ptr);
+		--(*n_locks);
+	}
 	free(*ptr);
 	*ptr = NULL;
 }
@@ -49,12 +53,15 @@ void	kill_mutex(t_data *data)
 	int	i;
 
 	i = -1;
-	free_mutex_ptr(&data->meal_lock);
-	free_mutex_ptr(&data->print_lock);
-	free_mutex_ptr(&data->ready_lock);
-	free_mutex_ptr(&data->stop_lock);
-	while (++i < data->n_philo)
-		pthread_mutex_destroy(&(data->fork)[i]);
+	free_mutex_ptr(&data->meal_lock, &data->n_init_locks);
+	free_mutex_ptr(&data->print_lock, &data->n_init_locks);
+	free_mutex_ptr(&data->ready_lock, &data->n_init_locks);
+	free_mutex_ptr(&data->stop_lock, &data->n_init_locks);
+	if (data->fork)
+	{
+		while (++i < data->n_philo && (data->n_init_forks)-- > 0)
+			pthread_mutex_destroy(&(data->fork)[i]);
+	}
 }
 
 void	table_free(t_table **ptr)
@@ -65,14 +72,7 @@ void	table_free(t_table **ptr)
 
 void	my_free(t_data *data)
 {
-	if (!data)
-		return ;
 	kill_mutex(data);
-	if (data->ids)
-	{
-		free(data->ids);
-		data->ids = NULL;
-	}
 	if (data->fork)
 	{
 		free(data->fork);

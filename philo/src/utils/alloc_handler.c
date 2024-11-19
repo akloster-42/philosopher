@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 14:01:55 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/19 16:42:47 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/19 16:46:23 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void	free_mutex_ptr(pthread_mutex_t **ptr, int *n_locks)
 	*ptr = NULL;
 }
 
-void	kill_mutex(t_data *data)
+static void	kill_mutex(t_data *data)
 {
 	int	i;
 

@@ -6,7 +6,7 @@
 /*   By: akloster <akloster@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 13:11:25 by akloster          #+#    #+#             */
-/*   Updated: 2024/11/19 16:42:47 by akloster         ###   ########.fr       */
+/*   Updated: 2024/11/19 16:46:25 by akloster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,6 @@
 #  define THINK "%ld %d is thinking\n"
 #  define DIE "%ld %d died\n"
 # endif
-# define MAX_USEC 999999
-# define NEED_SLEEP true
-# define NO_SLEEP false
 # define MAX_PHILO 200
 
 typedef struct s_data
@@ -84,7 +81,6 @@ int		alloc_threads(t_data *data);
 void	table_free(t_table **ptr);
 int		init_philo(t_data *data);
 void	*philo_routine(void *data);
-void	kill_mutex(t_data *data);
 long	ft_gettime(void);
 void	set_forks(t_table *table, int n_philo);
 bool	get_stop_bool(t_table *table);
